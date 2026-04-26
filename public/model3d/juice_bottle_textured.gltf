@@ -1,0 +1,220 @@
+{
+  "accessors": [
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "normalized": false,
+      "count": 418105,
+      "type": "VEC3",
+      "max": [
+        0.151397705078125,
+        0.299713134765625,
+        0.5
+      ],
+      "min": [
+        -0.151397705078125,
+        -0.299713134765625,
+        -0.5
+      ]
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "normalized": false,
+      "count": 418105,
+      "type": "VEC3",
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ]
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "normalized": false,
+      "count": 418105,
+      "type": "VEC2",
+      "max": [
+        1.0,
+        1.0
+      ],
+      "min": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "bufferView": 4,
+      "byteOffset": 0,
+      "componentType": 5125,
+      "normalized": false,
+      "count": 2434566,
+      "type": "SCALAR",
+      "max": [
+        418104.0
+      ],
+      "min": [
+        0.0
+      ]
+    }
+  ],
+  "asset": {
+    "generator": "pygltflib@v1.16.5",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 896334
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 896336,
+      "byteLength": 5017260,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 5913596,
+      "byteLength": 5017260,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 10930856,
+      "byteLength": 3344840,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 14275696,
+      "byteLength": 9738264,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "juice_bottle_textured.bin",
+      "byteLength": 24013960
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+  ],
+  "images": [
+    {
+      "mimeType": "image/jpeg",
+      "bufferView": 0,
+      "name": "juice+bottle+3d+model_basecolor.jpg"
+    },
+    {
+      "uri": "VITA_ENERGY_BaseColor.png"
+    },
+    {
+      "uri": "VITA_ENERGY_Normal.png"
+    },
+    {
+      "uri": "VITA_ENERGY_Roughness.png"
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.5,
+        "baseColorTexture": {
+          "index": 1,
+          "texCoord": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 3,
+          "texCoord": 0
+        }
+      },
+      "normalTexture": {
+        "index": 2,
+        "scale": 1.0
+      },
+      "emissiveFactor": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "alphaMode": "OPAQUE",
+      "doubleSided": false,
+      "name": "VitaEnergyMaterial"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "mode": 4,
+          "material": 0
+        }
+      ],
+      "name": "meshes[0]"
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "tripo_node_2b3527f3-efff-44a7-8bfe-e2a22c626d2d"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    }
+  ]
+}
