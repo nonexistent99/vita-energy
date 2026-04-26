@@ -12,7 +12,7 @@ export default function ProductModel({ scrollProgress }: ProductModelProps) {
   const { scene } = useGLTF('/model3d/vita_energy_fixed.glb');
   const targetRotationY = useRef(0);
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     if (!groupRef.current) return;
 
     // Subtle floating animation independent of scroll
