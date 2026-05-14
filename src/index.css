@@ -1,22 +1,20 @@
 @import "tailwindcss";
 
 /* ============================================
-   AÇAÍ PREMIUM — PREMIUM DESIGN SYSTEM (Tailwind v4)
+   VITA ENERGY — SIMPLIFIED PREMIUM DESIGN SYSTEM
    ============================================ */
 
 @theme {
-  --color-brand-deep: #1A0826;
-  --color-brand-surface: #2A2A2A;
-  --color-brand-violet: #5A0F73;
-  --color-brand-glow: #A020F0;
-  --color-brand-acai: #4B1E3A;
-  --color-brand-pink: #7B2CBF;
-  --color-brand-choco: #6B3E2E;
-  --color-brand-electric: #39FF14;
-  --color-brand-cyan: #2ECC71;
+  --color-brand-deep: #0f071a;
+  --color-brand-surface: #1a0e2e;
+  --color-brand-violet: #7c3aed;
+  --color-brand-glow: #a855f7;
+  --color-brand-acai: #581c87;
+  --color-brand-green: #22c55e;
+  --color-brand-whatsapp: #25D366;
   --color-text-base: #FFFFFF;
-  --color-text-muted: #BFBFBF;
-  --color-text-soft: #F2E6D8;
+  --color-text-muted: #a1a1aa;
+  --color-text-soft: #d4d4d8;
 
   --font-sans: 'Outfit', system-ui, sans-serif;
 }
@@ -30,62 +28,52 @@ html {
 }
 
 body {
-  background: radial-gradient(circle at 50% 40%, #D946EF 0%, #701A75 40%, #1A0826 100%);
-  background-attachment: fixed;
-
+  background: var(--color-brand-deep);
   color: var(--color-text-base);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.01;
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: overlay;
-}
-
-
-
 /* ============================================
    CUSTOM SCROLLBAR
    ============================================ */
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--color-brand-deep); }
-::-webkit-scrollbar-thumb { background: rgba(160, 32, 240, 0.35); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(160, 32, 240, 0.55); }
-
-/* ============================================
-   THREE.JS CANVAS
-   ============================================ */
-.three-canvas {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100vh !important;
-  z-index: 0;
-  pointer-events: none;
-}
+::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.35); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(124, 58, 237, 0.55); }
 
 /* ============================================
    ANIMATIONS
    ============================================ */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.15); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes shimmer {
@@ -93,109 +81,103 @@ body::after {
   100% { background-position: 200% 0; }
 }
 
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(124, 58, 237, 0.6); }
+}
+
 /* ============================================
    BUTTON SYSTEM
    ============================================ */
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-black border-none;
-  background: #39FF14;
-  box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: white;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  border: none;
+  cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
 }
 .btn-primary:hover {
   transform: translateY(-3px) scale(1.02);
-  background: #2ECC71;
-  box-shadow: 0 0 30px #A020F0; /* glow neon */
+  box-shadow: 0 8px 40px rgba(124, 58, 237, 0.5);
 }
 .btn-primary:active {
   transform: translateY(-1px) scale(0.98);
 }
 
-.btn-secondary {
-  @apply inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-white;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(160, 32, 240, 0.3);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #A020F0;
-  box-shadow: 0 0 20px rgba(160, 32, 240, 0.4);
-}
-
-/* ============================================
-   SELECTOR COMPONENTS
-   ============================================ */
-.selector-card {
-  @apply relative overflow-hidden rounded-2xl cursor-pointer text-left;
-  padding: 1.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(160, 32, 240, 0.3);
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.1rem 2.5rem;
+  border-radius: 9999px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: white;
+  background: linear-gradient(135deg, #22c55e, #25D366);
+  border: none;
+  cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 25px rgba(37, 211, 102, 0.3);
 }
-.selector-card:hover {
-  border-color: #A020F0;
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 30px rgba(160, 32, 240, 0.2);
+.btn-whatsapp:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 40px rgba(37, 211, 102, 0.5);
 }
-.selector-card.selected {
-  background: rgba(90, 15, 115, 0.5);
-  border-color: #A020F0;
-  box-shadow: 0 0 30px #A020F0;
-}
-
-.selector-chip {
-  @apply inline-flex items-center gap-2 rounded-full font-semibold whitespace-nowrap;
-  padding: 0.875rem 1.5rem;
-  font-size: 0.9rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(160, 32, 240, 0.3);
-  color: var(--color-text-soft);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.selector-chip:hover:not(.selected) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #A020F0;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 0 15px rgba(160, 32, 240, 0.2);
-}
-.selector-chip.selected {
-  background: #A020F0;
-  border-color: #A020F0;
-  color: white;
-  box-shadow: 0 0 25px rgba(160, 32, 240, 0.5);
-  transform: translateY(-2px);
+.btn-whatsapp:active {
+  transform: translateY(-1px) scale(0.98);
 }
 
 /* ============================================
    SECTION LABEL
    ============================================ */
 .section-label {
-  @apply inline-flex items-center gap-3 font-extrabold uppercase tracking-widest;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
   font-size: 0.65rem;
-  color: #A020F0;
-  margin-bottom: 1.5rem;
+  color: var(--color-brand-glow);
+  margin-bottom: 1.25rem;
 }
 .section-label::before {
   content: '';
   display: block;
   width: 2rem;
   height: 2px;
-  background: #5A0F73;
+  background: var(--color-brand-violet);
 }
 
 /* ============================================
-   TEXTAREA
+   GLASS CARD
    ============================================ */
-textarea {
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+}
+
+/* ============================================
+   TEXTAREA / INPUT
+   ============================================ */
+textarea, input[type="text"] {
   font-family: var(--font-sans);
 }
 
 /* ============================================
-   UTILITIES
+   SCROLLBAR HIDE
    ============================================ */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -204,5 +186,3 @@ textarea {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
-
