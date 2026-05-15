@@ -39,16 +39,16 @@ const PAID_EXTRAS: Extra[] = [
    COMPONENT
    ============================================ */
 export default function OrderSection() {
-  const [size, setSize] = useState(SIZES[0]);
-  const [base, setBase] = useState(BASES[0]);
+  const [size, setSize] = useState<Size | null>(null);
+  const [base, setBase] = useState<string | null>(null);
   const [accompaniments, setAccompaniments] = useState<string[]>([]);
   const [extras, setExtras] = useState<Extra[]>([]);
   const [notes, setNotes] = useState('');
-  const [delivery, setDelivery] = useState<'retirada' | 'entrega'>('entrega');
+  const [delivery, setDelivery] = useState<'retirada' | 'entrega' | null>(null);
   const [address, setAddress] = useState('');
 
   const total = useMemo(() => {
-    let t = size.price;
+    let t = size ? size.price : 0;
     extras.forEach(e => t += e.price);
     return t;
   }, [size, extras]);
@@ -65,7 +65,13 @@ export default function OrderSection() {
     setExtras(prev => prev.some(x => x.id === e.id) ? prev.filter(x => x.id !== e.id) : [...prev, e]);
   };
 
+  const isFormValid = size !== null && base !== null && delivery !== null && (delivery === 'entrega' ? address.trim().length > 0 : true);
+
   const submit = () => {
+    if (!size || !base || !delivery) {
+      alert('Por favor, preencha todos os campos obrigatórios (Tamanho, Sabor e Entrega).');
+      return;
+    }
     if (delivery === 'entrega' && !address.trim()) {
       alert('Por favor, informe seu endereço para entrega.');
       return;
@@ -104,55 +110,61 @@ export default function OrderSection() {
         </div>
 
         {/* === STEP 1: SIZE === */}
-        <OrderBlock number="1" title="Escolha o tamanho" delay="0.1s">
+        <OrderBlock number="1" title="Escolha o tamanho" subtitle="Obrigatório" delay="0.1s">
           <div className="grid grid-cols-2 gap-3">
-            {SIZES.map(s => (
-              <button
-                key={s.id}
-                onClick={() => setSize(s)}
-                className={`relative p-5 md:p-6 rounded-2xl text-left transition-all duration-300 border-2 ${
-                  size.id === s.id
-                    ? 'border-brand-violet bg-brand-violet/15 shadow-lg'
-                    : 'border-white/8 bg-white/3 hover:border-white/20'
-                }`}
-                style={size.id === s.id ? { boxShadow: '0 0 25px rgba(124,58,237,0.15)' } : {}}
-              >
-                <div className="text-2xl md:text-3xl font-black text-white">{s.ml}</div>
-                <div className="text-sm text-text-muted font-semibold mt-1">{s.label}</div>
-                <div className={`text-lg font-black mt-2 ${size.id === s.id ? 'text-brand-glow' : 'text-text-soft'}`}>
-                  R$ {s.price.toFixed(2)}
-                </div>
-                {size.id === s.id && (
-                  <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-brand-violet flex items-center justify-center">
-                    <CheckIcon />
+            {SIZES.map(s => {
+              const isSelected = size?.id === s.id;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => setSize(s)}
+                  className={`relative p-5 md:p-6 rounded-2xl text-left transition-all duration-300 border-2 ${
+                    isSelected
+                      ? 'border-brand-violet bg-brand-violet/15 shadow-lg'
+                      : 'border-white/8 bg-white/3 hover:border-white/20'
+                  }`}
+                  style={isSelected ? { boxShadow: '0 0 25px rgba(124,58,237,0.15)' } : {}}
+                >
+                  <div className="text-2xl md:text-3xl font-black text-white">{s.ml}</div>
+                  <div className="text-sm text-text-muted font-semibold mt-1">{s.label}</div>
+                  <div className={`text-lg font-black mt-2 ${isSelected ? 'text-brand-glow' : 'text-text-soft'}`}>
+                    R$ {s.price.toFixed(2)}
                   </div>
-                )}
-              </button>
-            ))}
+                  {isSelected && (
+                    <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-brand-violet flex items-center justify-center">
+                      <CheckIcon />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </OrderBlock>
 
         {/* === STEP 2: BASE === */}
-        <OrderBlock number="2" title="Sabor do Açaí" delay="0.15s">
+        <OrderBlock number="2" title="Sabor do Açaí" subtitle="Obrigatório" delay="0.15s">
           <div className="grid grid-cols-1 gap-3">
-            {BASES.map(b => (
-              <button
-                key={b}
-                onClick={() => setBase(b)}
-                className={`flex items-center gap-4 p-4 md:p-5 rounded-xl text-left font-bold transition-all duration-300 border-2 ${
-                  base === b
-                    ? 'border-brand-violet bg-brand-violet/15 text-white'
-                    : 'border-white/8 bg-white/3 text-text-muted hover:text-white hover:border-white/15'
-                }`}
-              >
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                  base === b ? 'bg-brand-violet border-brand-violet' : 'border-white/20'
-                }`}>
-                  {base === b && <div className="w-2 h-2 rounded-full bg-white" />}
-                </div>
-                <span className="text-base">{b === 'Açaí Tradicional' ? '🟣' : '⚪'} {b}</span>
-              </button>
-            ))}
+            {BASES.map(b => {
+              const isSelected = base === b;
+              return (
+                <button
+                  key={b}
+                  onClick={() => setBase(b)}
+                  className={`flex items-center gap-4 p-4 md:p-5 rounded-xl text-left font-bold transition-all duration-300 border-2 ${
+                    isSelected
+                      ? 'border-brand-violet bg-brand-violet/15 text-white'
+                      : 'border-white/8 bg-white/3 text-text-muted hover:text-white hover:border-white/15'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                    isSelected ? 'bg-brand-violet border-brand-violet' : 'border-white/20'
+                  }`}>
+                    {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                  </div>
+                  <span className="text-base">{b === 'Açaí Tradicional' ? '🟣' : '⚪'} {b}</span>
+                </button>
+              );
+            })}
           </div>
         </OrderBlock>
 
@@ -194,7 +206,7 @@ export default function OrderSection() {
         </OrderBlock>
 
         {/* === STEP 4: EXTRAS === */}
-        <OrderBlock number="4" title="Adicionais" subtitle="Itens pagos extras" delay="0.25s">
+        <OrderBlock number="4" title="Adicionais" subtitle="Opcional" delay="0.25s">
           <div className="grid grid-cols-1 gap-3">
             {PAID_EXTRAS.map(e => {
               const sel = extras.some(x => x.id === e.id);
@@ -227,26 +239,29 @@ export default function OrderSection() {
         </OrderBlock>
 
         {/* === STEP 5: DELIVERY === */}
-        <OrderBlock number="5" title="Como receber?" delay="0.3s">
+        <OrderBlock number="5" title="Como receber?" subtitle="Obrigatório" delay="0.3s">
           <div className="grid grid-cols-2 gap-3 mb-4">
             {([
               { v: 'entrega' as const, icon: '🏍️', label: 'Entrega', sub: 'No seu endereço' },
-              { v: 'retirada' as const, icon: '🏪', label: 'Retirada', sub: 'Na nossa loja' },
-            ]).map(o => (
-              <button
-                key={o.v}
-                onClick={() => setDelivery(o.v)}
-                className={`p-5 rounded-2xl text-center transition-all duration-300 border-2 ${
-                  delivery === o.v
-                    ? 'border-brand-violet bg-brand-violet/15'
-                    : 'border-white/8 bg-white/3 hover:border-white/15'
-                }`}
-              >
-                <div className="text-2xl mb-2">{o.icon}</div>
-                <div className="font-black text-white text-sm">{o.label}</div>
-                <div className="text-[0.65rem] text-text-muted mt-1">{o.sub}</div>
-              </button>
-            ))}
+              { v: 'retirada' as const, icon: '🏪', label: 'Retirada', sub: 'Na loja' },
+            ]).map(o => {
+              const isSelected = delivery === o.v;
+              return (
+                <button
+                  key={o.v}
+                  onClick={() => setDelivery(o.v)}
+                  className={`p-5 rounded-2xl text-center transition-all duration-300 border-2 ${
+                    isSelected
+                      ? 'border-brand-violet bg-brand-violet/15'
+                      : 'border-white/8 bg-white/3 hover:border-white/15'
+                  }`}
+                >
+                  <div className="text-2xl mb-2">{o.icon}</div>
+                  <div className="font-black text-white text-sm">{o.label}</div>
+                  <div className="text-[0.65rem] text-text-muted mt-1">{o.sub}</div>
+                </button>
+              );
+            })}
           </div>
 
           {delivery === 'entrega' && (
@@ -285,8 +300,8 @@ export default function OrderSection() {
           
           {/* Summary mini */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-4 text-xs text-text-muted">
-            <span className="px-2 py-1 rounded-lg bg-white/5 font-bold">{size.ml}</span>
-            <span className="px-2 py-1 rounded-lg bg-white/5 font-bold">{base}</span>
+            {size && <span className="px-2 py-1 rounded-lg bg-white/5 font-bold">{size.ml}</span>}
+            {base && <span className="px-2 py-1 rounded-lg bg-white/5 font-bold">{base}</span>}
             {accompaniments.map(a => (
               <span key={a} className="px-2 py-1 rounded-lg bg-brand-violet/15 text-brand-glow font-bold">{a}</span>
             ))}
@@ -300,9 +315,13 @@ export default function OrderSection() {
             R$ <span className="text-brand-glow">{total.toFixed(2)}</span>
           </div>
 
-          <button onClick={submit} className="btn-whatsapp w-full sm:w-auto text-lg">
+          <button 
+            onClick={submit} 
+            disabled={!isFormValid}
+            className={`w-full sm:w-auto text-lg transition-all duration-300 ${isFormValid ? 'btn-whatsapp' : 'inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold bg-white/10 text-white/50 cursor-not-allowed border-none'}`}
+          >
             <WhatsAppIcon />
-            Enviar Pedido pelo WhatsApp
+            {isFormValid ? 'Enviar Pedido pelo WhatsApp' : 'Preencha os campos para pedir'}
           </button>
 
           <p className="text-xs text-text-muted mt-4 opacity-50">

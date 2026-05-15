@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-const TOTAL_FRAMES = 80;
+// To optimize loading, we will only load every 2nd frame (40 frames instead of 80).
+// This cuts the download size in half, making it load much faster on mobile networks.
+const TOTAL_ORIGINAL_FRAMES = 80;
+const SKIP_FRAMES = 2; 
+const TOTAL_FRAMES = Math.floor(TOTAL_ORIGINAL_FRAMES / SKIP_FRAMES);
+
 const FRAME_PREFIX = '/animation/VITA_ENERGY_bottle_202603311622_';
 
 function padFrame(n: number): string {
@@ -11,30 +16,12 @@ export default function HeroSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const frameRef = useRef(0);
-  const [loaded, setLoaded] = useState(false);
+  const [firstFrameLoaded, setFirstFrameLoaded] = useState(false);
+  const [allLoaded, setAllLoaded] = useState(false);
   const rafRef = useRef<number>(0);
   const directionRef = useRef(1);
 
-  // Preload all frames
-  useEffect(() => {
-    let loadedCount = 0;
-    const images: HTMLImageElement[] = [];
-
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
-      const img = new Image();
-      img.src = `${FRAME_PREFIX}${padFrame(i)}.jpg`;
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === TOTAL_FRAMES) {
-          setLoaded(true);
-        }
-      };
-      images.push(img);
-    }
-    imagesRef.current = images;
-  }, []);
-
-  // Draw current frame to canvas
+  // Draw a specific frame to the canvas
   const drawFrame = useCallback((index: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -54,19 +41,17 @@ export default function HeroSection() {
     let drawWidth, drawHeight, offsetX, offsetY;
 
     if (canvasRatio > imgRatio) {
-      // Tela mais larga (Desktop). Mantém o enquadramento original (garrafa à direita)
+      // Desktop: canvas is wider than image
       drawWidth = cw;
       drawHeight = cw / imgRatio;
       offsetX = 0;
       offsetY = (ch - drawHeight) / 2;
     } else {
-      // Tela mais alta (Mobile). A garrafa está nos ~75% da imagem original.
-      // Vamos ajustar o offsetX para centralizar a garrafa na tela do celular.
+      // Mobile: canvas is taller than image
       drawHeight = ch;
       drawWidth = ch * imgRatio;
       
-      // O ponto focal (a garrafa) está em 75% da largura da imagem.
-      // Queremos que esse ponto (drawWidth * 0.75) fique no centro da tela (cw / 2).
+      // Bottle is at ~75% of original image width
       const focalPointX = drawWidth * 0.75;
       offsetX = (cw / 2) - focalPointX;
       
@@ -77,15 +62,55 @@ export default function HeroSection() {
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   }, []);
 
-  // Auto-play animation loop
+  // Preload frames
   useEffect(() => {
-    if (!loaded) return;
+    let loadedCount = 0;
+    const images: HTMLImageElement[] = [];
+
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
+      const img = new Image();
+      // Skip frames to reduce load size (e.g. 0, 2, 4, 6...)
+      const originalFrameIndex = i * SKIP_FRAMES;
+      img.src = `${FRAME_PREFIX}${padFrame(originalFrameIndex)}.jpg`;
+      
+      img.onload = () => {
+        loadedCount++;
+        
+        // As soon as the first frame loads, we can display it!
+        if (i === 0) {
+          setFirstFrameLoaded(true);
+        }
+        
+        // Once ALL frames are loaded, we can start the animation loop
+        if (loadedCount === TOTAL_FRAMES) {
+          setAllLoaded(true);
+        }
+      };
+      images.push(img);
+    }
+    imagesRef.current = images;
+  }, []);
+
+  // Handle immediate draw of the first frame once it's ready
+  useEffect(() => {
+    if (firstFrameLoaded && !allLoaded) {
+      drawFrame(0);
+      const handleResize = () => drawFrame(0);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, [firstFrameLoaded, allLoaded, drawFrame]);
+
+  // Handle the animation loop once ALL frames are loaded
+  useEffect(() => {
+    if (!allLoaded) return;
 
     const handleResize = () => drawFrame(frameRef.current);
     window.addEventListener('resize', handleResize);
 
     let lastTime = 0;
-    const fps = 24;
+    // Lower FPS slightly because we halved the frames
+    const fps = 12; 
     const interval = 1000 / fps;
 
     const animate = (time: number) => {
@@ -108,7 +133,7 @@ export default function HeroSection() {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', handleResize);
     };
-  }, [loaded, drawFrame]);
+  }, [allLoaded, drawFrame]);
 
   const scrollToBuilder = () => {
     document.getElementById('pedido')?.scrollIntoView({ behavior: 'smooth' });
@@ -122,12 +147,13 @@ export default function HeroSection() {
           ref={canvasRef}
           className="w-full h-full object-cover"
           style={{
-            filter: loaded ? 'none' : 'blur(10px)',
+            filter: firstFrameLoaded ? 'none' : 'blur(10px)',
             transition: 'filter 0.5s ease',
             opacity: 0.95
           }}
         />
-        {!loaded && (
+        {/* Loading spinner only shows until the VERY FIRST frame loads */}
+        {!firstFrameLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-20">
             <div className="w-12 h-12 border-4 border-white/20 border-t-brand-glow rounded-full" style={{ animation: 'spin 1s linear infinite' }} />
           </div>

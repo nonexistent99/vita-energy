@@ -2,8 +2,7 @@
    VITA ENERGY — CONFIG & UTILS
    ============================================ */
 
-/** WhatsApp phone number — easy to edit */
-export const WHATSAPP_PHONE = '5538997350624';
+export const WHATSAPP_PHONE = '5538998561869';
 
 /** Brand name */
 export const BRAND_NAME = 'Vita Energy';
