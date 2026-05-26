@@ -1,10 +1,19 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, type RefObject } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MeshDistortMaterial, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface FloatingElementsProps {
   scrollProgress: number;
+}
+
+interface FloatingElementData {
+  x: number;
+  y: number;
+  z: number;
+  s: number;
+  floatSpeed: number;
+  spinSpeed: number;
 }
 
 export default function FloatingElements({ scrollProgress }: FloatingElementsProps) {
@@ -19,7 +28,7 @@ export default function FloatingElements({ scrollProgress }: FloatingElementsPro
   
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  const generateData = (count: number, spread: number, zRange: [number, number]) => 
+  const generateData = (count: number, spread: number, zRange: [number, number]): FloatingElementData[] => 
     Array.from({ length: count }).map(() => ({
       x: (Math.random() - 0.5) * spread,
       y: (Math.random() - 0.5) * 20,
@@ -36,7 +45,7 @@ export default function FloatingElements({ scrollProgress }: FloatingElementsPro
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
 
-    const animate = (ref: React.RefObject<THREE.InstancedMesh | null>, data: any[], baseScale: number, speedMult: number) => {
+    const animate = (ref: RefObject<THREE.InstancedMesh | null>, data: FloatingElementData[], baseScale: number, speedMult: number) => {
       if (!ref.current) return;
       data.forEach((d, i) => {
         let newY = d.y + (Math.sin(time * d.floatSpeed) * 0.5) - (scrollProgress * 15 * speedMult);
