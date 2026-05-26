@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   Check,
   Image,
+  LogOut,
   Package,
   Plus,
   RotateCcw,
@@ -30,6 +31,10 @@ import {
 
 type AdminTab = 'products' | 'coupons' | 'banners' | 'business';
 
+interface AdminPanelProps {
+  onLogout: () => void;
+}
+
 const TABS: Array<{ id: AdminTab; label: string; icon: LucideIcon }> = [
   { id: 'products', label: 'Produtos', icon: Package },
   { id: 'coupons', label: 'Cupons', icon: TicketPercent },
@@ -37,7 +42,7 @@ const TABS: Array<{ id: AdminTab; label: string; icon: LucideIcon }> = [
   { id: 'business', label: 'Loja', icon: Store },
 ];
 
-export default function AdminPanel() {
+export default function AdminPanel({ onLogout }: AdminPanelProps) {
   const { config, setConfig, resetConfig } = useStoreConfig();
   const [draft, setDraft] = useState<StoreConfig>(config);
   const [activeTab, setActiveTab] = useState<AdminTab>('products');
@@ -68,6 +73,10 @@ export default function AdminPanel() {
       resetConfig();
       setSaved(false);
     }
+  };
+
+  const logout = () => {
+    onLogout();
   };
 
   const openStorefront = () => {
@@ -226,6 +235,14 @@ export default function AdminPanel() {
             >
               <RotateCcw size={16} />
               Restaurar
+            </button>
+            <button
+              type="button"
+              onClick={logout}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-sm font-bold hover:bg-slate-100 transition-all"
+            >
+              <LogOut size={16} />
+              Sair
             </button>
             <button
               type="button"

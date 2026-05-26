@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import AdminLogin from './components/AdminLogin';
 import AdminPanel from './components/AdminPanel';
 import Footer from './components/Footer';
 import HeroSection from './components/HeroSection';
 import Navbar from './components/Navbar';
 import OrderSection from './components/OrderSection';
 import PromoBanners from './components/PromoBanners';
+import { clearAdminSession, isAdminAuthenticated } from './utils/adminAuth';
 
 function isAdminRoute() {
   return window.location.pathname === '/admin'
@@ -14,6 +16,7 @@ function isAdminRoute() {
 
 export default function App() {
   const [adminOpen, setAdminOpen] = useState(() => isAdminRoute());
+  const [adminAuthenticated, setAdminAuthenticated] = useState(() => isAdminAuthenticated());
 
   useEffect(() => {
     const syncRoute = () => setAdminOpen(isAdminRoute());
@@ -26,7 +29,16 @@ export default function App() {
     };
   }, []);
 
-  if (adminOpen) return <AdminPanel />;
+  const logoutAdmin = () => {
+    clearAdminSession();
+    setAdminAuthenticated(false);
+  };
+
+  if (adminOpen && !adminAuthenticated) {
+    return <AdminLogin onAuthenticated={() => setAdminAuthenticated(true)} />;
+  }
+
+  if (adminOpen) return <AdminPanel onLogout={logoutAdmin} />;
 
   return (
     <div className="relative bg-brand-deep text-white min-h-screen">

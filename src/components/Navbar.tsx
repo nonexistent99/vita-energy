@@ -1,4 +1,4 @@
-import { Settings, ShoppingBag } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useStoreConfig } from '../hooks/useStoreConfig';
 
@@ -37,13 +37,6 @@ export default function Navbar() {
         </button>
 
         <div className="flex items-center gap-2">
-          <a
-            href="#/admin"
-            aria-label="Abrir painel admin"
-            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all"
-          >
-            <Settings size={16} />
-          </a>
           <button
             onClick={() => scrollTo('pedido')}
             className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-bold text-white transition-all duration-300 hover:scale-105"
